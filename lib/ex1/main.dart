@@ -1,85 +1,67 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(const MyApp());
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Hobbies Demo',
+void main() => runApp(MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.grey[400],
         appBar: AppBar(
-          title: const Text('My Hobbies'),
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-          elevation: 0,
+          title: const Text("Custom buttons"),
         ),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 40.0),
-            child: ListView(
-              // keep children stretched to full width
-              children: const [
-                HobbyCard(
-                  color: Color(0xFF39A94A),
-                  icon: Icons.flight_takeoff,
-                  label: 'Travelling',
-                ),
-                SizedBox(height: 10),
-                HobbyCard(
-                  color: Color(0xFF607D8B),
-                  icon: Icons.directions_run,
-                  label: 'Skating',
-                ),
-              ],
-            ),
-          ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+              SelectedButton(),
+              SizedBox(height: 20),
+              SelectedButton(),
+              SizedBox(height: 20),
+              SelectedButton(),
+              SizedBox(height: 20),
+              SelectedButton(),
+          ],
         ),
       ),
-    );
-  }
-}
+    ));
 
-class HobbyCard extends StatelessWidget {
-  final Color color;
-  final IconData icon;
-  final String label;
-
-  const HobbyCard({
+class SelectedButton extends StatefulWidget {
+  const SelectedButton({
     super.key,
-    required this.color,
-    required this.icon,
-    required this.label,
   });
 
   @override
+  State<SelectedButton> createState() => _SelectionState();
+}
+
+class _SelectionState extends State<SelectedButton> {
+  bool isSelect = false;
+
+  String get statusText => isSelect ? "Selected" : "Not Selected";
+
+  Color get textColor => isSelect ? Colors.white : Colors.black;
+
+  Color get backgroundColor => isSelect ? Colors.blue[500]! : Colors.blue[50]!;
+
+  void toggleSelected() {
+    setState(() {
+      isSelect = !isSelect;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Material(
-      color: color,
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        height: 64,
-        padding: const EdgeInsets.only(left: 30.0, right: 20.0),
-        child: Row(
-          children: [
-            Icon(icon, color: Colors.white, size: 28),
-            const SizedBox(width: 20),
-            Expanded(
-              child: Text(
-                label,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+    return Center(
+      child: SizedBox(
+        width: 400,
+        height: 100,
+        child: ElevatedButton(
+          onPressed: toggleSelected,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: backgroundColor,
+            foregroundColor: textColor,
+          ),
+          child: Center(
+            child: Text(
+              statusText,
+              style: TextStyle(color: textColor),
             ),
-          ],
+          ),
         ),
       ),
     );
